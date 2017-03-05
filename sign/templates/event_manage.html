@@ -4,7 +4,7 @@
     {% load bootstrap3 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Guest Manage</title>
+    <title>Event Manage</title>
 </head>
 
 <body role="document">
@@ -21,7 +21,7 @@
             <u1 class="nav navbar-nav navbar-right">
                 <li><a href="#">{{ user }}</a></li>         '''
                 <li><a href="/logout/">退出</a></li>
-                <!--{{ }} Django 的模板标签，用于定义显示变量。这里将会通过浏览器sessionid 获取到对应的登录用户名，
+                <!--Django 的模板标签，用于定义显示变量。这里将会通过浏览器sessionid 获取到对应的登录用户名，
 并显示。href="/logout/" 定义退出路径，稍后完善该功能。-->
             </u1>
         </div>
@@ -44,6 +44,7 @@
                <thread>
                    <tr>
                        <th>id</th><th>名称</th><th>状态</th><th>地址</th><th>时间</th>
+                       <th>签到</th>
                    </tr>
                </thread>
                <tbody>
@@ -54,6 +55,7 @@
                             <td>{{ event.status }}</td>
                             <td>{{ event.address }}</td>
                             <td>{{ event.start_time }}</td>
+                            <td><a href="/sign_index/{{ event.id }}/" target="{{ event.id }}_blank">sign</a></td>
                         </tr>
                     {% endfor %}
                </tbody>
