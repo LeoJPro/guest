@@ -13,7 +13,7 @@ def add_event(request):
     address = request.POST.get('address','')        # 地址
     start_time = request.POST.get('start_time','')  #发布会时间
 
-    if eid = ''or name == ''or limit == '' or address == '' or start_time == '':
+    if eid == ''or name == ''or limit == '' or address == '' or start_time == '':
         return JsonResponse({'status': 10021,'message':'parameter error'})
 
     result = Event.objects.filter(id = eid)
@@ -106,7 +106,7 @@ def add_guest(request):
         Guest.objects.create(realname=realname,phone=int(phone),email=email,\
                              sign=0,event_id=int(eid))
     except IntegrityError:
-        return JsonResponse({'status':10026},'message':'the event guest phone number repeat')
+        return JsonResponse({'status':10026,'message':'the event guest phone number repeat'})
 
     return JsonResponse({'status':200,'message':'add guest success'})
 
@@ -147,46 +147,46 @@ def get_guest_list(request):
             return JsonResponse({'status':200,'message':'success','data':guest})
 
 # 嘉宾签到接口
-    def user_sign(request):
-        eid = request.POST.get('eid','')                 # 发布会id
-        phone =request.POST.get('phone','')              # 嘉宾手机号
+def user_sign(request):
+    eid = request.POST.get('eid','')                 # 发布会id
+    phone =request.POST.get('phone','')              # 嘉宾手机号
 
-        if eid == '' or phone == '':
-            return JsonResponse({'status':10021,'message':'parameter error'})
+    if eid == '' or phone == '':
+        return JsonResponse({'status':10021,'message':'parameter error'})
 
-        result = Event.objects.filter(id=eid)
-        if not result:
-            return JsonResponse({'status':10022,'message':event id null})
+    result = Event.objects.filter(id=eid)
+    if not result:
+        return JsonResponse({'status':10022,'message':'event id null'})
 
-        result = Event.objects.get(id = eid).status
-        if not result:
-            return JsonResponse({'status':10023,'message':'event status is not available'})
+    result = Event.objects.get(id = eid).status
+    if not result:
+        return JsonResponse({'status':10023,'message':'event status is not available'})
 
-        event_time = Event.objects.get(id=eid).start_time           # 发布会时间
-        etime = str(event_time).split(".")[0]
-        timeArray = time.strptime(etime, '%Y-%m-%d %H:%M::%S')
-        e_time = int(time.mktime(timeArray))
+    event_time = Event.objects.get(id=eid).start_time           # 发布会时间
+    etime = str(event_time).split(".")[0]
+    timeArray = time.strptime(etime, '%Y-%m-%d %H:%M::%S')
+    e_time = int(time.mktime(timeArray))
 
-        now_time = str(time.time())                     # 当前时间
-        ntime = now_time.split(".")[0]
-        n_time = int(ntime)
+    now_time = str(time.time())                     # 当前时间
+    ntime = now_time.split(".")[0]
+    n_time = int(ntime)
 
-        if n_time >= e_time:
-            return JsonResponse({'status':10024,'message':'event has started'})
+    if n_time >= e_time:
+        return JsonResponse({'status':10024,'message':'event has started'})
 
-        result = Guest.objects.filter(phone = phone)
-        if not result:
-            return JsonResponse({'status':10025,'message':'user phone null'})
+    result = Guest.objects.filter(phone = phone)
+    if not result:
+        return JsonResponse({'status':10025,'message':'user phone null'})
 
-        result = Guest.objects.filter(event_id=eid,phone=phone)
-        if not result:
-            return  JsonResponse({'status':10026,\
-                                  'message':'user did not participate in the conference'})
+    result = Guest.objects.filter(event_id=eid,phone=phone)
+    if not result:
+        return  JsonResponse({'status':10026,\
+                              'message':'user did not participate in the conference'})
 
-        result = Guest.objects.get(event_id=eid,phone=phone).sign
-        if result :
-            return JsonResponse({'status':10027,'message':'user has sign in'})
-        else:
-            Guest.objects.filter(event_id=eid,phone=phone).update(sign='1')
-            return JsonResponse({'status':200,'message':'sign success'})
+    result = Guest.objects.get(event_id=eid,phone=phone).sign
+    if result :
+        return JsonResponse({'status':10027,'message':'user has sign in'})
+    else:
+        Guest.objects.filter(event_id=eid,phone=phone).update(sign='1')
+        return JsonResponse({'status':200,'message':'sign success'})
 
