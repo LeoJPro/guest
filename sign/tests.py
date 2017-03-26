@@ -11,9 +11,8 @@ class ModelTest(TestCase):
 
     def setUp(self):
         Event.objects.create(id=1, name="oneplus 3 event", status=True, limit=2000, address="shenzhen",
-                             start_time="2016-08-31 02:18:22", create_time="2016-08-31 02:18:22")
-        Guest.objects.create(id=1, event_id=1, realname="alen", phone="13711001101", email="alen@mail.com",
-                             create_time="2016-08-31 02:18:22", sign=False)
+                             start_time="2016-08-31 02:18:22")
+        Guest.objects.create(id=1, event_id=1, realname="alen", phone="13711001101", email="alen@mail.com", sign=False)
 
     def test_event_models(self):
         result = Event.objects.get(name="oneplus 3 event")
@@ -65,7 +64,7 @@ class LoginActionTest(TestCase):
 class EventManageTest(TestCase):
     # 发布会管理(此用例要通过需要去掉event_manage()和search_name()函数的@login_requred装饰器)
     def setUp(self):
-        Event.objects.create(id=2, name='xiaomi5', limit=2000, status=True, create_time="2016-08-31 02:18:22",
+        Event.objects.create(id=2, name='xiaomi5', limit=2000, status=True,
                              address='beijing', start_time=datetime(2016, 8, 10, 14, 0, 0))
         self.c = Client()
 
@@ -88,7 +87,7 @@ class GuestManageTest(TestCase):
     # 嘉宾管理(此用例要通过需要去掉guest_manage()和search_name()函数的@login_requred装饰器)
 
     def setUp(self):
-        Event.objects.create(id=1, name="xiaomi5", limit=2000, address='beijing', create_time="2016-08-31 02:18:22",
+        Event.objects.create(id=1, name="xiaomi5", limit=2000, address='beijing',
                              status=1, start_time=datetime(2016, 8, 10, 14, 0, 0))
         Guest.objects.create(realname="alen", phone=18611001100, email='alen@mail.com',
                              create_time="2016-08-31 02:18:22", sign=0, event_id=1)
@@ -113,13 +112,13 @@ class SignIndexActionTest(TestCase):
     # 发布会签到(此用例要通过需要去掉guest_manage()和search_name()函数的@login_requred装饰器)
 
     def setUp(self):
-        Event.objects.create(id=1, name="xiaomi5", limit=2000, address="beijing", create_time="2016-08-31 02:18:22",
+        Event.objects.create(id=1, name="xiaomi5", limit=2000, address="beijing",
                              status=1, start_time="2017-8-10 12:30:00")
-        Event.objects.create(id=2, name="oneplus4", limit=2000, address="shenzhen", create_time="2016-08-31 02:18:22",
+        Event.objects.create(id=2, name="oneplus4", limit=2000, address="shenzhen",
                              status=1, start_time="2017-7-10 12:30:00")
         Guest.objects.create(realname="alen", phone=18611001100, create_time="2016-08-31 02:18:22",
                              email='alen@mail.com', sign=0, event_id=1)
-        Guest.objects.create(realname="una", phone=18611001101, email='una@mail.com', create_time="2016-08-31 02:18:22",
+        Guest.objects.create(realname="una", phone=18611001101, email='una@mail.com',
                              sign=1, event_id=2)
         self.c = Client()
 
