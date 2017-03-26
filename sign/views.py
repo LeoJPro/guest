@@ -24,23 +24,25 @@ def login_action(request):
             return render(request,'index.html', {'error':'username or password error!'})
 
 # 发布会管理
-@login_required
+#@login_required
 def event_manage(request):
-    '''username = request.COOKIES.get('user','')    # 读取浏览器cookie'''
-    event_list = Event.objects.all()             #用于查询所有发布会对象（数据）
-    username = request.session.get('user','')    # 读取浏览器session
-    return render(request,"event_manage.html",{"user":username,"events":event_list})
+    # username = request.COOKIES.get('user','')     读取浏览器cookie
+    event_list = Event.objects.all()             # 用于查询所有发布会对象（数据）
+    username = request.session.get('user', '')    # 读取浏览器session
+    return render(request, "event_manage.html", {"user": username, "events": event_list})
+
 
 #发布会名称搜索
-@login_required
+# @login_required
 def search_name(request):
-    username = request.session.get('user','')
-    search_name = request.GET.get("name","")
+    username = request.session.get('user', '')
+    search_name = request.GET.get("name", "")
     event_list = Event.objects.filter(name__contains=search_name)
-    return  render(request,"event_manage.html",{"user":username,"events":event_list})
+    return render(request, "event_manage.html", {"user": username, "events": event_list})
+
 
 # 嘉宾管理
-@login_required
+# @login_required
 def guest_manage(request):
     username = request.session.get('user','')
     guest_list = Guest.objects.all()
@@ -54,16 +56,22 @@ def guest_manage(request):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         contacts = paginator.page(paginator.num_pages)
-    return render(request,"guest_manage.html",{"user":username,"guests":contacts})
+    return render(request, "guest_manage.html",{"user":username,"guests":contacts})
+
+def search_phone(request):
+    username = request.session.get('user', '')
+    search_phone = request.GET.get("phone", "")
+    guest_list = Guest.objects.filter(phone__contains=search_phone)
+    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
 
 # 签到页面
-@login_required
+# @login_required
 def sign_index(request,event_id):
     event = get_object_or_404(Event, id=event_id)
     return render(request,'sign_index.html',{'event':event})
 
 # 签到动作
-@login_required
+# @login_required
 def sign_index_action(request,event_id):
     event = get_object_or_404(Event,id=event_id)
     phone = request.POST.get('phone','')
@@ -83,7 +91,7 @@ def sign_index_action(request,event_id):
         return render(request,'sign_index.html',{'event':event,'hint':'sign in success!','guest':result})
 
 # 退出登录
-@login_required
+# @login_required
 def logout(request):
     auth.logout(request)           # 退出登录
     response = HttpResponseRedirect('/index/')
